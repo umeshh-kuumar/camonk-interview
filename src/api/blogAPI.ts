@@ -1,30 +1,25 @@
-import axios from "axios";
+import type { Blog } from "../types/blog";
 
-const api = axios.create({
-  baseURL: "http://localhost:3001"
-});
-
-export interface Blog {
-  id: number;
-  title: string;
-  category: string[];
-  description: string;
-  content: string;
-  coverImage: string;
-  date: string;
-}
+const BASE_URL = "http://localhost:3001/blogs";
 
 export const getBlogs = async (): Promise<Blog[]> => {
-  const res = await api.get("/blogs");
-  return res.data;
+  const res = await fetch(BASE_URL);
+  if (!res.ok) throw new Error("Failed to fetch blogs");
+  return res.json();
 };
 
 export const getBlogById = async (id: number): Promise<Blog> => {
-  const res = await api.get(`/blogs/${id}`);
-  return res.data;
+  const res = await fetch(`${BASE_URL}/${id}`);
+  if (!res.ok) throw new Error("Failed to fetch blog");
+  return res.json();
 };
 
 export const createBlog = async (blog: Omit<Blog, "id">) => {
-  const res = await api.post("/blogs", blog);
-  return res.data;
+  const res = await fetch(BASE_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(blog),
+  });
+  if (!res.ok) throw new Error("Failed to create blog");
+  return res.json();
 };
