@@ -1,9 +1,42 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createBlog } from "../api/blogAPI";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+export default function CreateBlogForm() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: createBlog,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.currentTarget); // Get all inputs
+
+  mutation.mutate({
+    title: formData.get("title") as string,
+    description: formData.get("description") as string,
+    content: formData.get("content") as string,
+    category: ["TECH"],
+    coverImage: "https://picsum.photos/600/400",
+    date: new Date().toISOString(),
+  });
+
+  e.currentTarget.reset();
+};
 
 
-const CreateBlogForm = () => {
   return (
-    <div>CreateBlogForm</div>
-  )
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <Input name="title" placeholder="Title" required />
+      <Input name="description" placeholder="Description" required />
+      <Input name="content" placeholder="Content" required />
+      <Button type="submit">Create Blog</Button>
+    </form>
+  );
 }
-
-export default CreateBlogForm

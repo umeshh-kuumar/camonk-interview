@@ -1,6 +1,6 @@
 import { useState } from "react";
-// import BlogList from "../components/BlogList";
-// import BlogDetails from "../components/BlogDetails";
+import BlogList from "../components/BlogList";
+import BlogDetails from "../components/BlogDetails";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
@@ -14,11 +14,18 @@ export default function Home() {
         <Button onClick={() => navigate("/create")} className="w-full">
           Create Blog
         </Button>
-        {/* <BlogList onSelect={setSelectedId} /> */}
+
+        <BlogList onSelect={setSelectedId} />
       </div>
 
       <div className="md:col-span-2">
-        {/* <BlogDetails blogId={selectedId} /> */}
+        {selectedId ? (
+          <BlogDetails blogId={selectedId} />
+        ) : (
+          <div className="h-full flex items-center justify-center text-gray-500">
+            Select a blog to view details
+          </div>
+        )}
       </div>
     </div>
   );
