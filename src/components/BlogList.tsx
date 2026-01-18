@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { getBlogs } from "@/api/blogAPI";
 import BlogCard from "./BlogCard";
+import type { Blog } from "@/types/blog";
 
-export default function BlogList({
-  onSelect,
-}: {
+type BlogListProps = {
   onSelect: (id: number) => void;
-}) {
-  const { data, isLoading, error } = useQuery({
+};
+
+export default function BlogList({ onSelect }: BlogListProps) {
+  const { data, isLoading, error } = useQuery<Blog[]>({
     queryKey: ["blogs"],
     queryFn: getBlogs,
   });
@@ -18,7 +19,11 @@ export default function BlogList({
   return (
     <div className="space-y-4">
       {data?.map((blog) => (
-        <BlogCard key={blog.id} blog={blog} onClick={onSelect} />
+        <BlogCard
+          key={blog.id}
+          blog={blog}
+          onClick={onSelect}
+        />
       ))}
     </div>
   );
